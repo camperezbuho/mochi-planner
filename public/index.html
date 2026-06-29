@@ -10,23 +10,18 @@
 </head>
 <body>
 
-<!-- ───────────────────────────────────────────────────────────
-     MODAL: NUEVA TAREA / EDITAR TAREA
-──────────────────────────────────────────────────────────────── -->
+<!-- MODAL: NUEVA TAREA -->
 <div class="modal-overlay" id="taskModal">
   <div class="modal">
     <h2 id="taskModalTitle">✨ Nueva Tarea</h2>
-
     <div class="form-group">
       <label>Título</label>
       <input type="text" id="taskTitle" class="form-input" placeholder="¿Qué tenés que hacer?">
     </div>
-
     <div class="form-group">
       <label>Descripción (opcional)</label>
       <textarea id="taskDesc" class="form-textarea" placeholder="Más detalles..."></textarea>
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label>Categoría</label>
@@ -50,7 +45,6 @@
         </select>
       </div>
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label>Fecha límite</label>
@@ -61,14 +55,12 @@
         <input type="number" id="taskEstimated" class="form-input" placeholder="ej: 45" min="1" max="999">
       </div>
     </div>
-
     <div class="form-group">
       <label>Recordatorio</label>
       <input type="datetime-local" id="taskReminder" class="form-input">
     </div>
-
     <div class="form-group">
-      <label>Color de categoría</label>
+      <label>Color</label>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;" id="colorPicker">
         <button class="color-dot active" data-color="#dcd0ff" style="background:#dcd0ff;"></button>
         <button class="color-dot" data-color="#dae8c3" style="background:#dae8c3;"></button>
@@ -78,7 +70,6 @@
         <button class="color-dot" data-color="#c8f0e8" style="background:#c8f0e8;"></button>
       </div>
     </div>
-
     <div class="modal-footer">
       <button class="btn-secondary" id="cancelTaskBtn">Cancelar</button>
       <button class="btn-primary" id="saveTaskBtn">Guardar tarea 🐾</button>
@@ -86,24 +77,20 @@
   </div>
 </div>
 
-<!-- ───────────────────────────────────────────────────────────
-     MODAL: NUEVO HÁBITO
-──────────────────────────────────────────────────────────────── -->
+<!-- MODAL: NUEVO HÁBITO -->
 <div class="modal-overlay" id="habitModal">
   <div class="modal">
     <h2>🌱 Nuevo Hábito</h2>
-
     <div class="form-row">
       <div class="form-group">
         <label>Nombre del hábito</label>
         <input type="text" id="habitTitle" class="form-input" placeholder="ej: Meditar">
       </div>
       <div class="form-group">
-        <label>Emoji / Ícono</label>
-        <input type="text" id="habitIcon" class="form-input" placeholder="ej: 🧘" maxlength="4" value="✨">
+        <label>Emoji</label>
+        <input type="text" id="habitIcon" class="form-input" placeholder="🧘" maxlength="4" value="✨">
       </div>
     </div>
-
     <div class="form-row">
       <div class="form-group">
         <label>Frecuencia</label>
@@ -117,7 +104,6 @@
         <input type="time" id="habitReminder" class="form-input">
       </div>
     </div>
-
     <div class="form-group">
       <label>Color</label>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;" id="habitColorPicker">
@@ -129,7 +115,6 @@
         <button class="color-dot" data-color="#c8f0e8" style="background:#c8f0e8;"></button>
       </div>
     </div>
-
     <div class="modal-footer">
       <button class="btn-secondary" id="cancelHabitBtn">Cancelar</button>
       <button class="btn-primary" id="saveHabitBtn">Crear hábito 🌸</button>
@@ -137,12 +122,10 @@
   </div>
 </div>
 
-<!-- ───────────────────────────────────────────────────────────
-     APP SHELL
-──────────────────────────────────────────────────────────────── -->
+<!-- APP SHELL -->
 <div class="app-shell">
 
-  <!-- SIDEBAR -->
+  <!-- SIDEBAR (desktop) -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-logo">
       <div class="sidebar-logo-icon">
@@ -153,42 +136,21 @@
         <p>Softly productive 🌸</p>
       </div>
     </div>
-
     <button class="btn-new-entry" id="sidebarNewTask">
-      <span class="material-symbols-outlined">add</span>
-      Nueva Tarea
+      <span class="material-symbols-outlined">add</span> Nueva Tarea
     </button>
-
     <div class="sidebar-divider"></div>
-
     <nav>
-      <a href="#" class="nav-item active" data-page="dashboard">
-        <span class="material-symbols-outlined">dashboard</span> Dashboard
-      </a>
-      <a href="#" class="nav-item" data-page="tasks">
-        <span class="material-symbols-outlined">checklist</span> Mis Tareas
-      </a>
-      <a href="#" class="nav-item" data-page="habits">
-        <span class="material-symbols-outlined">self_improvement</span> Hábitos
-      </a>
-      <a href="#" class="nav-item" data-page="monthly">
-        <span class="material-symbols-outlined">calendar_month</span> Mes
-      </a>
-      <a href="#" class="nav-item" data-page="weekly">
-        <span class="material-symbols-outlined">view_week</span> Semana
-      </a>
-      <a href="#" class="nav-item" data-page="daily">
-        <span class="material-symbols-outlined">calendar_view_day</span> Día
-      </a>
+      <a href="#" class="nav-item active" data-page="dashboard"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
+      <a href="#" class="nav-item" data-page="tasks"><span class="material-symbols-outlined">checklist</span> Mis Tareas</a>
+      <a href="#" class="nav-item" data-page="habits"><span class="material-symbols-outlined">self_improvement</span> Hábitos</a>
+      <a href="#" class="nav-item" data-page="monthly"><span class="material-symbols-outlined">calendar_month</span> Mes</a>
+      <a href="#" class="nav-item" data-page="weekly"><span class="material-symbols-outlined">view_week</span> Semana</a>
+      <a href="#" class="nav-item" data-page="daily"><span class="material-symbols-outlined">calendar_view_day</span> Día</a>
     </nav>
-
     <div class="sidebar-divider" style="margin-top:auto;"></div>
-    <a href="finanzas.html" class="nav-item" style="color:var(--secondary);">
-      <span class="material-symbols-outlined">account_balance_wallet</span> Finanzas
-    </a>
-    <a href="#" class="nav-item" style="margin-bottom:0;">
-      <span class="material-symbols-outlined">settings</span> Ajustes
-    </a>
+    <a href="finanzas.html" class="nav-item" style="color:var(--secondary);"><span class="material-symbols-outlined">account_balance_wallet</span> Finanzas</a>
+    <a href="#" class="nav-item"><span class="material-symbols-outlined">settings</span> Ajustes</a>
   </aside>
 
   <!-- MAIN -->
@@ -196,10 +158,7 @@
 
     <!-- TOPBAR -->
     <header class="topbar">
-      <div style="display:flex; align-items:center; gap:16px;">
-        <button class="btn-notif" id="mobilMenuBtn" style="display:none;">
-          <span class="material-symbols-outlined">menu</span>
-        </button>
+      <div style="display:flex; align-items:center; gap:12px; flex:1;">
         <div class="topbar-search">
           <span class="material-symbols-outlined">search</span>
           <input type="text" id="searchInput" placeholder="Buscar tareas...">
@@ -214,26 +173,18 @@
       </div>
     </header>
 
-    <!-- ══════════════════════════════════════════════════════
-         PAGE: DASHBOARD
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE: DASHBOARD -->
     <div class="page active" id="page-dashboard">
       <div id="notifBanner" class="notif-banner" style="display:none;">
         <span class="material-symbols-outlined icon-fill" style="color:var(--primary);">notifications_active</span>
-        <span>Activá las notificaciones para recibir recordatorios de tus tareas 🐱</span>
+        <span>Activá las notificaciones para recibir recordatorios 🐱</span>
         <button id="enableNotifBtn">Activar</button>
       </div>
-
-      <!-- Saludo -->
       <section style="margin-bottom:32px;">
         <h2 class="text-display" style="color:var(--primary); font-style:italic;" id="greeting">¡Hola, Mochi!</h2>
         <p class="text-title" style="color:var(--on-surface-variant); margin-top:8px; font-style:italic;" id="dailyQuote"></p>
       </section>
-
-      <!-- Bento Grid -->
       <div class="bento-grid">
-
-        <!-- Card: Tiempo estimado (donut) -->
         <div class="card card-accent-purple col-4">
           <div style="display:flex; align-items:center; gap:8px; color:var(--primary); margin-bottom:16px;">
             <span class="material-symbols-outlined">schedule</span>
@@ -243,14 +194,10 @@
             <div class="progress-ring-container" style="width:120px; height:120px; margin-bottom:12px;">
               <svg width="120" height="120" viewBox="0 0 120 120">
                 <circle cx="60" cy="60" r="50" fill="none" stroke="var(--surface-container-high)" stroke-width="10"/>
-                <circle id="donutRing" class="progress-ring__circle" cx="60" cy="60" r="50" fill="none"
-                  stroke="var(--primary)" stroke-width="10"
-                  stroke-linecap="round"
-                  stroke-dasharray="314" stroke-dashoffset="314"
-                  transform="rotate(-90 60 60)"/>
+                <circle id="donutRing" class="progress-ring__circle" cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="10" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" transform="rotate(-90 60 60)"/>
               </svg>
               <div style="position:absolute; text-align:center;">
-                <span class="text-headline-sm" id="donutLabel" style="color:var(--primary);">0h</span>
+                <span class="text-headline-sm" id="donutLabel" style="color:var(--primary);">0m</span>
                 <span class="text-label" style="display:block; color:var(--on-surface-variant);">pendiente</span>
               </div>
             </div>
@@ -266,9 +213,7 @@
             </div>
           </div>
         </div>
-
-        <!-- Card: Focus tasks de hoy -->
-        <div class="card card-accent-green col-5">
+        <div class="card card-accent-green col-5" style="position:relative; overflow:hidden;">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
             <div style="display:flex; align-items:center; gap:8px; color:var(--secondary);">
               <span class="material-symbols-outlined">target</span>
@@ -281,8 +226,6 @@
             <img src="cats/cat-peeking.png" alt="" style="width:100%; height:100%; object-fit:contain;">
           </div>
         </div>
-
-        <!-- Card: Mini semana -->
         <div class="card card-accent-pink col-3">
           <div style="display:flex; align-items:center; gap:8px; color:var(--tertiary); margin-bottom:16px;">
             <span class="material-symbols-outlined">event</span>
@@ -293,8 +236,6 @@
             <p class="text-body-sm" id="weekNote" style="color:var(--on-tertiary-container);">Cargando...</p>
           </div>
         </div>
-
-        <!-- Card: Hábitos de hoy -->
         <div class="card card-accent-lavender col-7" style="position:relative; overflow:hidden;">
           <div style="display:flex; align-items:center; gap:8px; color:var(--primary); margin-bottom:16px;">
             <span class="material-symbols-outlined">self_improvement</span>
@@ -305,8 +246,6 @@
             <img src="cats/cat-cloud.png" alt="" style="width:100%; height:100%; object-fit:contain;">
           </div>
         </div>
-
-        <!-- Card: Streak -->
         <div class="card col-5" style="background:var(--primary); border-bottom:none;">
           <p class="text-label" style="color:var(--on-primary); opacity:0.8;">Racha de hábitos</p>
           <div style="display:flex; align-items:flex-end; gap:8px; margin:12px 0;">
@@ -318,8 +257,6 @@
           </div>
           <p class="text-body-sm" style="color:var(--on-primary); opacity:0.7; margin-top:8px;">🎯 Meta: 30 días</p>
         </div>
-
-        <!-- Card: Tips -->
         <div class="card col-12" style="background:var(--surface-container-low); display:grid; grid-template-columns:1fr 1fr; gap:16px;">
           <div style="display:flex; align-items:center; gap:16px; padding:8px;">
             <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
@@ -340,20 +277,17 @@
             </div>
           </div>
         </div>
-
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PAGE: TASKS
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE: TASKS -->
     <div class="page" id="page-tasks">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
         <div>
           <h2 class="text-headline" style="color:var(--on-surface);">Mis Tareas</h2>
           <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;" id="tasksSubtitle">Cargando...</p>
         </div>
-        <div style="display:flex; gap:8px;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <select id="filterStatus" class="form-select" style="width:auto; padding:8px 12px;">
             <option value="all">Todas</option>
             <option value="pendiente">Pendientes</option>
@@ -369,10 +303,7 @@
           <button class="btn-primary" id="tasksNewBtn">+ Nueva tarea</button>
         </div>
       </div>
-
-      <!-- Kanban columns -->
-      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
-
+      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;" id="kanbanGrid">
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
             <div style="width:10px; height:10px; border-radius:50%; background:var(--primary);"></div>
@@ -380,7 +311,6 @@
           </div>
           <div id="colInProgress" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
         </div>
-
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
             <div style="width:10px; height:10px; border-radius:50%; background:var(--secondary);"></div>
@@ -388,7 +318,6 @@
           </div>
           <div id="colPending" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
         </div>
-
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
             <div style="width:10px; height:10px; border-radius:50%; background:var(--outline);"></div>
@@ -396,18 +325,13 @@
           </div>
           <div id="colCompleted" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
         </div>
-
       </div>
-
-      <!-- Cat decoración -->
       <div style="display:flex; justify-content:center; margin-top:32px;" class="cat-deco">
         <img src="cats/cat-pencil.png" alt="" style="width:120px; height:120px; object-fit:contain; opacity:0.75;">
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PAGE: HABITS
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE: HABITS -->
     <div class="page" id="page-habits">
       <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
         <div>
@@ -416,46 +340,31 @@
         </div>
         <button class="btn-primary" id="habitsNewBtn">+ Nuevo hábito</button>
       </div>
-
       <div id="habitsList" style="display:flex; flex-direction:column; gap:12px; max-width:640px;"></div>
-
       <div style="display:flex; justify-content:flex-end; margin-top:32px;" class="cat-deco">
         <img src="cats/cat-yarn.png" alt="" style="width:130px; height:130px; object-fit:contain; opacity:0.75;">
       </div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PAGE: MONTHLY
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE: MONTHLY -->
     <div class="page" id="page-monthly">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
         <div>
           <h2 class="text-display" style="color:var(--primary); font-style:italic;" id="monthTitle">Mes</h2>
           <p class="text-body-sm" style="color:var(--on-surface-variant);">Un mes para crecer suavemente 🌸</p>
         </div>
         <div style="display:flex; gap:8px;">
-          <button class="btn-secondary" id="prevMonth" style="padding:8px 16px;">‹ Anterior</button>
+          <button class="btn-secondary" id="prevMonth" style="padding:8px 16px;">‹</button>
           <button class="btn-secondary" id="todayMonth" style="padding:8px 16px;">Hoy</button>
-          <button class="btn-secondary" id="nextMonth" style="padding:8px 16px;">Siguiente ›</button>
+          <button class="btn-secondary" id="nextMonth" style="padding:8px 16px;">›</button>
         </div>
       </div>
-
-      <!-- Leyenda -->
-      <div style="display:flex; gap:16px; margin-bottom:16px; padding:12px 16px; background:var(--surface-lowest); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">
-        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary-container);display:inline-block;"></span><span class="text-label">Trabajo</span></div>
-        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--secondary-container);display:inline-block;"></span><span class="text-label">Personal</span></div>
-        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--tertiary-container);display:inline-block;"></span><span class="text-label">Salud</span></div>
-        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--error-container);display:inline-block;"></span><span class="text-label">Urgente</span></div>
-      </div>
-
-      <div class="calendar-grid" id="monthlyCalendar" style="gap:10px;"></div>
+      <div class="calendar-grid" id="monthlyCalendar" style="gap:8px;"></div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PAGE: WEEKLY
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE: WEEKLY -->
     <div class="page" id="page-weekly">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
         <div>
           <h2 class="text-headline" style="color:var(--on-surface);">Vista Semanal</h2>
           <p class="text-body-sm" style="color:var(--on-surface-variant);" id="weeklyRange">Cargando...</p>
@@ -466,18 +375,15 @@
           <button class="btn-secondary" id="nextWeek" style="padding:8px 16px;">›</button>
         </div>
       </div>
-
-      <div id="weeklyGrid" style="background:var(--surface-lowest); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); overflow-x:auto;"></div>
+      <div id="weeklyGrid" style="background:var(--surface-lowest); border-radius:var(--radius-lg); padding:16px; box-shadow:var(--shadow-sm); overflow-x:auto;"></div>
     </div>
 
-    <!-- ══════════════════════════════════════════════════════
-         PAGE: DAILY
-    ═══════════════════════════════════════════════════════════ -->
+    <!-- PAGE: DAILY -->
     <div class="page" id="page-daily">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
         <div>
           <p class="text-label" style="color:var(--primary); margin-bottom:4px;" id="dailyDateLabel">HOY</p>
-          <h2 class="text-display" style="color:var(--on-surface);">Día a día</h2>
+          <h2 class="text-headline" style="color:var(--on-surface);">Día a día</h2>
         </div>
         <div style="display:flex; gap:8px;">
           <button class="btn-secondary" id="prevDay" style="padding:8px 16px;">‹</button>
@@ -485,30 +391,21 @@
           <button class="btn-secondary" id="nextDay" style="padding:8px 16px;">›</button>
         </div>
       </div>
-
-      <div style="display:grid; grid-template-columns:1fr 320px; gap:24px;">
-        <!-- Timeline -->
-        <div style="background:var(--surface-lowest); border-radius:var(--radius-lg); padding:24px; box-shadow:var(--shadow-sm);">
+      <div style="display:grid; grid-template-columns:1fr 300px; gap:20px;" id="dailyGrid">
+        <div style="background:var(--surface-lowest); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm);">
           <div id="dailyTimeline"></div>
         </div>
-
-        <!-- Panel lateral -->
         <div style="display:flex; flex-direction:column; gap:16px;">
           <div class="card card-accent-purple">
             <h3 class="text-title" style="margin-bottom:12px;">Tareas del día</h3>
             <div id="dailyTasks" style="display:flex; flex-direction:column; gap:8px;"></div>
           </div>
-
           <div style="background:var(--secondary); border-radius:var(--radius-lg); padding:20px;">
             <p class="text-label" style="color:var(--on-secondary); opacity:0.8; margin-bottom:4px;">Energía del día</p>
             <p class="text-headline-sm" style="color:var(--on-secondary);" id="dailyEnergyLabel">¡Vamos!</p>
-            <div style="background:rgba(255,255,255,0.2); height:8px; border-radius:var(--radius-full); overflow:hidden; margin-top:8px;">
-              <div style="height:100%; background:white; border-radius:var(--radius-full); width:70%;"></div>
-            </div>
           </div>
-
           <div class="cat-deco" style="text-align:center;">
-            <img src="cats/cat-cloud.png" alt="" style="width:110px; height:110px; object-fit:contain; opacity:0.8;">
+            <img src="cats/cat-cloud.png" alt="" style="width:100px; height:100px; object-fit:contain; opacity:0.8;">
           </div>
         </div>
       </div>
@@ -518,27 +415,51 @@
 </div><!-- /app-shell -->
 
 <!-- FAB mobile -->
-<button class="fab" id="fabBtn" style="display:none;">
+<button class="fab" id="fabBtn">
   <span class="material-symbols-outlined">add</span>
 </button>
 
-<!-- ── Color dot styles ───────────────────────────────── -->
-<style>
-  .color-dot {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid transparent;
-    transition: all 0.15s;
-  }
-  .color-dot:hover, .color-dot.active { border-color: var(--primary); transform: scale(1.15); }
+<!-- BOTTOM NAV mobile -->
+<nav class="mobile-nav" id="mobileNav">
+  <button class="mobile-nav-item active" data-page="dashboard">
+    <span class="material-symbols-outlined">dashboard</span>
+    <span>Inicio</span>
+  </button>
+  <button class="mobile-nav-item" data-page="tasks">
+    <span class="material-symbols-outlined">checklist</span>
+    <span>Tareas</span>
+  </button>
+  <button class="mobile-nav-item" data-page="habits">
+    <span class="material-symbols-outlined">self_improvement</span>
+    <span>Hábitos</span>
+  </button>
+  <button class="mobile-nav-item" data-page="monthly">
+    <span class="material-symbols-outlined">calendar_month</span>
+    <span>Mes</span>
+  </button>
+  <a href="finanzas.html" class="mobile-nav-item">
+    <span class="material-symbols-outlined">account_balance_wallet</span>
+    <span>Finanzas</span>
+  </a>
+</nav>
 
-  /* Task card overdue pulse */
+<style>
+  .color-dot { width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.15s; }
+  .color-dot:hover, .color-dot.active { border-color:var(--primary); transform:scale(1.15); }
   @keyframes overduePulse {
     0%,100% { box-shadow: 0 0 0 0 rgba(186,26,26,0.2); }
     50% { box-shadow: 0 0 0 6px rgba(186,26,26,0); }
   }
   .task-card.overdue { animation: overduePulse 2s ease infinite; }
+  @media (max-width: 768px) {
+    #dailyGrid { grid-template-columns: 1fr !important; }
+    #kanbanGrid { grid-template-columns: 1fr !important; }
+    .fab { display: flex !important; }
+  }
+  @media (min-width: 769px) {
+    .fab { display: none !important; }
+    .mobile-nav { display: none !important; }
+  }
 </style>
 
 <script type="module" src="js/app.js"></script>
