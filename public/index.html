@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mochi Planner 🐱</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="manifest" href="manifest.json">
+</head>
+<body>
+
+<!-- ───────────────────────────────────────────────────────────
+     MODAL: NUEVA TAREA / EDITAR TAREA
+──────────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="taskModal">
+  <div class="modal">
+    <h2 id="taskModalTitle">✨ Nueva Tarea</h2>
+
+    <div class="form-group">
+      <label>Título</label>
+      <input type="text" id="taskTitle" class="form-input" placeholder="¿Qué tenés que hacer?">
+    </div>
+
+    <div class="form-group">
+      <label>Descripción (opcional)</label>
+      <textarea id="taskDesc" class="form-textarea" placeholder="Más detalles..."></textarea>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Categoría</label>
+        <select id="taskCategory" class="form-select">
+          <option value="General">General</option>
+          <option value="Trabajo">Trabajo</option>
+          <option value="Estudio">Estudio</option>
+          <option value="Personal">Personal</option>
+          <option value="Salud">Salud</option>
+          <option value="Hogar">Hogar</option>
+          <option value="Creatividad">Creatividad</option>
+          <option value="Social">Social</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Prioridad</label>
+        <select id="taskPriority" class="form-select">
+          <option value="alta">Alta</option>
+          <option value="media" selected>Media</option>
+          <option value="baja">Baja</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Fecha límite</label>
+        <input type="date" id="taskDueDate" class="form-input">
+      </div>
+      <div class="form-group">
+        <label>Tiempo estimado (min)</label>
+        <input type="number" id="taskEstimated" class="form-input" placeholder="ej: 45" min="1" max="999">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Recordatorio</label>
+      <input type="datetime-local" id="taskReminder" class="form-input">
+    </div>
+
+    <div class="form-group">
+      <label>Color de categoría</label>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;" id="colorPicker">
+        <button class="color-dot active" data-color="#dcd0ff" style="background:#dcd0ff;"></button>
+        <button class="color-dot" data-color="#dae8c3" style="background:#dae8c3;"></button>
+        <button class="color-dot" data-color="#f8cbd6" style="background:#f8cbd6;"></button>
+        <button class="color-dot" data-color="#ffd9e2" style="background:#ffd9e2;"></button>
+        <button class="color-dot" data-color="#ffefc1" style="background:#ffefc1;"></button>
+        <button class="color-dot" data-color="#c8f0e8" style="background:#c8f0e8;"></button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancelTaskBtn">Cancelar</button>
+      <button class="btn-primary" id="saveTaskBtn">Guardar tarea 🐾</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────────────────────────────────────────
+     MODAL: NUEVO HÁBITO
+──────────────────────────────────────────────────────────────── -->
+<div class="modal-overlay" id="habitModal">
+  <div class="modal">
+    <h2>🌱 Nuevo Hábito</h2>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Nombre del hábito</label>
+        <input type="text" id="habitTitle" class="form-input" placeholder="ej: Meditar">
+      </div>
+      <div class="form-group">
+        <label>Emoji / Ícono</label>
+        <input type="text" id="habitIcon" class="form-input" placeholder="ej: 🧘" maxlength="4" value="✨">
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label>Frecuencia</label>
+        <select id="habitFrequency" class="form-select">
+          <option value="daily">Todos los días</option>
+          <option value="weekdays">Días de semana</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Recordatorio diario</label>
+        <input type="time" id="habitReminder" class="form-input">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label>Color</label>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;" id="habitColorPicker">
+        <button class="color-dot active" data-color="#dae8c3" style="background:#dae8c3;"></button>
+        <button class="color-dot" data-color="#dcd0ff" style="background:#dcd0ff;"></button>
+        <button class="color-dot" data-color="#f8cbd6" style="background:#f8cbd6;"></button>
+        <button class="color-dot" data-color="#ffd9e2" style="background:#ffd9e2;"></button>
+        <button class="color-dot" data-color="#ffefc1" style="background:#ffefc1;"></button>
+        <button class="color-dot" data-color="#c8f0e8" style="background:#c8f0e8;"></button>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancelHabitBtn">Cancelar</button>
+      <button class="btn-primary" id="saveHabitBtn">Crear hábito 🌸</button>
+    </div>
+  </div>
+</div>
+
+<!-- ───────────────────────────────────────────────────────────
+     APP SHELL
+──────────────────────────────────────────────────────────────── -->
+<div class="app-shell">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="sidebar-logo-icon">
+        <span class="material-symbols-outlined">bubble_chart</span>
+      </div>
+      <div>
+        <h1>Mochi Planner</h1>
+        <p>Softly productive 🌸</p>
+      </div>
+    </div>
+
+    <button class="btn-new-entry" id="sidebarNewTask">
+      <span class="material-symbols-outlined">add</span>
+      Nueva Tarea
+    </button>
+
+    <div class="sidebar-divider"></div>
+
+    <nav>
+      <a href="#" class="nav-item active" data-page="dashboard">
+        <span class="material-symbols-outlined">dashboard</span> Dashboard
+      </a>
+      <a href="#" class="nav-item" data-page="tasks">
+        <span class="material-symbols-outlined">checklist</span> Mis Tareas
+      </a>
+      <a href="#" class="nav-item" data-page="habits">
+        <span class="material-symbols-outlined">self_improvement</span> Hábitos
+      </a>
+      <a href="#" class="nav-item" data-page="monthly">
+        <span class="material-symbols-outlined">calendar_month</span> Mes
+      </a>
+      <a href="#" class="nav-item" data-page="weekly">
+        <span class="material-symbols-outlined">view_week</span> Semana
+      </a>
+      <a href="#" class="nav-item" data-page="daily">
+        <span class="material-symbols-outlined">calendar_view_day</span> Día
+      </a>
+    </nav>
+
+    <div class="sidebar-divider" style="margin-top:auto;"></div>
+    <a href="#" class="nav-item" style="margin-bottom:0;">
+      <span class="material-symbols-outlined">settings</span> Ajustes
+    </a>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="main-content">
+
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <div style="display:flex; align-items:center; gap:16px;">
+        <button class="btn-notif" id="mobilMenuBtn" style="display:none;">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+        <div class="topbar-search">
+          <span class="material-symbols-outlined">search</span>
+          <input type="text" id="searchInput" placeholder="Buscar tareas...">
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn-notif" id="notifBtn">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="badge" id="notifBadge" style="display:none;"></span>
+        </button>
+        <button class="btn-add-task" id="topbarNewTask">+ Tarea</button>
+      </div>
+    </header>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: DASHBOARD
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="page active" id="page-dashboard">
+      <div id="notifBanner" class="notif-banner" style="display:none;">
+        <span class="material-symbols-outlined icon-fill" style="color:var(--primary);">notifications_active</span>
+        <span>Activá las notificaciones para recibir recordatorios de tus tareas 🐱</span>
+        <button id="enableNotifBtn">Activar</button>
+      </div>
+
+      <!-- Saludo -->
+      <section style="margin-bottom:32px;">
+        <h2 class="text-display" style="color:var(--primary); font-style:italic;" id="greeting">¡Hola, Mochi!</h2>
+        <p class="text-title" style="color:var(--on-surface-variant); margin-top:8px; font-style:italic;" id="dailyQuote"></p>
+      </section>
+
+      <!-- Bento Grid -->
+      <div class="bento-grid">
+
+        <!-- Card: Tiempo estimado (donut) -->
+        <div class="card card-accent-purple col-4">
+          <div style="display:flex; align-items:center; gap:8px; color:var(--primary); margin-bottom:16px;">
+            <span class="material-symbols-outlined">schedule</span>
+            <span class="text-title">Tiempo estimado</span>
+          </div>
+          <div style="display:flex; flex-direction:column; align-items:center;">
+            <div class="progress-ring-container" style="width:120px; height:120px; margin-bottom:12px;">
+              <svg width="120" height="120" viewBox="0 0 120 120">
+                <circle cx="60" cy="60" r="50" fill="none" stroke="var(--surface-container-high)" stroke-width="10"/>
+                <circle id="donutRing" class="progress-ring__circle" cx="60" cy="60" r="50" fill="none"
+                  stroke="var(--primary)" stroke-width="10"
+                  stroke-linecap="round"
+                  stroke-dasharray="314" stroke-dashoffset="314"
+                  transform="rotate(-90 60 60)"/>
+              </svg>
+              <div style="position:absolute; text-align:center;">
+                <span class="text-headline-sm" id="donutLabel" style="color:var(--primary);">0h</span>
+                <span class="text-label" style="display:block; color:var(--on-surface-variant);">pendiente</span>
+              </div>
+            </div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; width:100%;">
+              <div style="background:var(--surface-container); padding:8px; border-radius:var(--radius-md); text-align:center;">
+                <p class="text-label" style="color:var(--on-surface-variant);">Completadas</p>
+                <p class="text-title" id="dashCompleted">0</p>
+              </div>
+              <div style="background:var(--surface-container); padding:8px; border-radius:var(--radius-md); text-align:center;">
+                <p class="text-label" style="color:var(--on-surface-variant);">Pendientes</p>
+                <p class="text-title" id="dashPending">0</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Focus tasks de hoy -->
+        <div class="card card-accent-green col-5">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+            <div style="display:flex; align-items:center; gap:8px; color:var(--secondary);">
+              <span class="material-symbols-outlined">target</span>
+              <span class="text-title">Focus de hoy</span>
+            </div>
+            <span class="text-label" style="color:var(--on-surface-variant);" id="dashTodayCount">0 tareas</span>
+          </div>
+          <div id="dashTodayTasks" style="display:flex; flex-direction:column; gap:8px; max-height:240px; overflow-y:auto;"></div>
+          <div style="position:absolute; bottom:-8px; right:-8px; width:80px; height:80px; opacity:0.7;" class="cat-deco">
+            <img src="cats/cat-peeking.png" alt="" style="width:100%; height:100%; object-fit:contain;">
+          </div>
+        </div>
+
+        <!-- Card: Mini semana -->
+        <div class="card card-accent-pink col-3">
+          <div style="display:flex; align-items:center; gap:8px; color:var(--tertiary); margin-bottom:16px;">
+            <span class="material-symbols-outlined">event</span>
+            <span class="text-title">Esta semana</span>
+          </div>
+          <div id="miniWeek" style="display:flex; flex-direction:column; gap:4px;"></div>
+          <div style="margin-top:12px; padding:10px; background:var(--tertiary-fixed); border-radius:var(--radius-md);">
+            <p class="text-body-sm" id="weekNote" style="color:var(--on-tertiary-container);">Cargando...</p>
+          </div>
+        </div>
+
+        <!-- Card: Hábitos de hoy -->
+        <div class="card card-accent-lavender col-7" style="position:relative; overflow:hidden;">
+          <div style="display:flex; align-items:center; gap:8px; color:var(--primary); margin-bottom:16px;">
+            <span class="material-symbols-outlined">self_improvement</span>
+            <span class="text-title">Hábitos de hoy</span>
+          </div>
+          <div id="dashHabits" style="display:flex; flex-direction:column; gap:8px; max-height:200px; overflow-y:auto;"></div>
+          <div style="position:absolute; bottom:-12px; right:-8px; width:100px; height:100px; opacity:0.6;" class="cat-deco">
+            <img src="cats/cat-cloud.png" alt="" style="width:100%; height:100%; object-fit:contain;">
+          </div>
+        </div>
+
+        <!-- Card: Streak -->
+        <div class="card col-5" style="background:var(--primary); border-bottom:none;">
+          <p class="text-label" style="color:var(--on-primary); opacity:0.8;">Racha de hábitos</p>
+          <div style="display:flex; align-items:flex-end; gap:8px; margin:12px 0;">
+            <span class="text-display" style="color:var(--on-primary); line-height:1;" id="dashStreak">0</span>
+            <span class="text-body" style="color:var(--on-primary); opacity:0.85; padding-bottom:4px;">días seguidos</span>
+          </div>
+          <div style="background:rgba(255,255,255,0.2); height:8px; border-radius:var(--radius-full); overflow:hidden;">
+            <div id="streakBar" style="height:100%; background:white; border-radius:var(--radius-full); width:0%; transition:width 1s ease;"></div>
+          </div>
+          <p class="text-body-sm" style="color:var(--on-primary); opacity:0.7; margin-top:8px;">🎯 Meta: 30 días</p>
+        </div>
+
+        <!-- Card: Tips -->
+        <div class="card col-12" style="background:var(--surface-container-low); display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div style="display:flex; align-items:center; gap:16px; padding:8px;">
+            <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
+              <span class="material-symbols-outlined" style="color:var(--primary);">edit_note</span>
+            </div>
+            <div>
+              <p class="text-title">Reflexión diaria</p>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);">¿Cómo te sentís hoy? Anotá un pensamiento.</p>
+            </div>
+          </div>
+          <div style="display:flex; align-items:center; gap:16px; padding:8px;">
+            <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
+              <span class="material-symbols-outlined" style="color:var(--secondary);">lightbulb</span>
+            </div>
+            <div>
+              <p class="text-title">Tip Mochi</p>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);" id="mochiTip">Dividí tareas grandes en mochis de 15 min 🐾</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: TASKS
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-tasks">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+        <div>
+          <h2 class="text-headline" style="color:var(--on-surface);">Mis Tareas</h2>
+          <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;" id="tasksSubtitle">Cargando...</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <select id="filterStatus" class="form-select" style="width:auto; padding:8px 12px;">
+            <option value="all">Todas</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="en-progreso">En progreso</option>
+            <option value="completada">Completadas</option>
+          </select>
+          <select id="filterPriority" class="form-select" style="width:auto; padding:8px 12px;">
+            <option value="all">Toda prioridad</option>
+            <option value="alta">Alta</option>
+            <option value="media">Media</option>
+            <option value="baja">Baja</option>
+          </select>
+          <button class="btn-primary" id="tasksNewBtn">+ Nueva tarea</button>
+        </div>
+      </div>
+
+      <!-- Kanban columns -->
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;">
+
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--primary);"></div>
+            <h3 class="text-title">En progreso</h3>
+          </div>
+          <div id="colInProgress" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
+        </div>
+
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--secondary);"></div>
+            <h3 class="text-title">Pendientes</h3>
+          </div>
+          <div id="colPending" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
+        </div>
+
+        <div>
+          <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
+            <div style="width:10px; height:10px; border-radius:50%; background:var(--outline);"></div>
+            <h3 class="text-title">Completadas</h3>
+          </div>
+          <div id="colCompleted" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
+        </div>
+
+      </div>
+
+      <!-- Cat decoración -->
+      <div style="display:flex; justify-content:center; margin-top:32px;" class="cat-deco">
+        <img src="cats/cat-pencil.png" alt="" style="width:120px; height:120px; object-fit:contain; opacity:0.75;">
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: HABITS
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-habits">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+        <div>
+          <h2 class="text-headline" style="color:var(--on-surface);">Mis Hábitos</h2>
+          <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;">Construí rutinas que te hagan bien 🌱</p>
+        </div>
+        <button class="btn-primary" id="habitsNewBtn">+ Nuevo hábito</button>
+      </div>
+
+      <div id="habitsList" style="display:flex; flex-direction:column; gap:12px; max-width:640px;"></div>
+
+      <div style="display:flex; justify-content:flex-end; margin-top:32px;" class="cat-deco">
+        <img src="cats/cat-yarn.png" alt="" style="width:130px; height:130px; object-fit:contain; opacity:0.75;">
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: MONTHLY
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-monthly">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px;">
+        <div>
+          <h2 class="text-display" style="color:var(--primary); font-style:italic;" id="monthTitle">Mes</h2>
+          <p class="text-body-sm" style="color:var(--on-surface-variant);">Un mes para crecer suavemente 🌸</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-secondary" id="prevMonth" style="padding:8px 16px;">‹ Anterior</button>
+          <button class="btn-secondary" id="todayMonth" style="padding:8px 16px;">Hoy</button>
+          <button class="btn-secondary" id="nextMonth" style="padding:8px 16px;">Siguiente ›</button>
+        </div>
+      </div>
+
+      <!-- Leyenda -->
+      <div style="display:flex; gap:16px; margin-bottom:16px; padding:12px 16px; background:var(--surface-lowest); border-radius:var(--radius-md); box-shadow:var(--shadow-sm);">
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--primary-container);display:inline-block;"></span><span class="text-label">Trabajo</span></div>
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--secondary-container);display:inline-block;"></span><span class="text-label">Personal</span></div>
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--tertiary-container);display:inline-block;"></span><span class="text-label">Salud</span></div>
+        <div style="display:flex; align-items:center; gap:6px;"><span style="width:10px;height:10px;border-radius:50%;background:var(--error-container);display:inline-block;"></span><span class="text-label">Urgente</span></div>
+      </div>
+
+      <div class="calendar-grid" id="monthlyCalendar" style="gap:10px;"></div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: WEEKLY
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-weekly">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <div>
+          <h2 class="text-headline" style="color:var(--on-surface);">Vista Semanal</h2>
+          <p class="text-body-sm" style="color:var(--on-surface-variant);" id="weeklyRange">Cargando...</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-secondary" id="prevWeek" style="padding:8px 16px;">‹</button>
+          <button class="btn-secondary" id="todayWeek" style="padding:8px 16px;">Hoy</button>
+          <button class="btn-secondary" id="nextWeek" style="padding:8px 16px;">›</button>
+        </div>
+      </div>
+
+      <div id="weeklyGrid" style="background:var(--surface-lowest); border-radius:var(--radius-lg); padding:20px; box-shadow:var(--shadow-sm); overflow-x:auto;"></div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         PAGE: DAILY
+    ═══════════════════════════════════════════════════════════ -->
+    <div class="page" id="page-daily">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+        <div>
+          <p class="text-label" style="color:var(--primary); margin-bottom:4px;" id="dailyDateLabel">HOY</p>
+          <h2 class="text-display" style="color:var(--on-surface);">Día a día</h2>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-secondary" id="prevDay" style="padding:8px 16px;">‹</button>
+          <button class="btn-secondary" id="todayDay" style="padding:8px 16px;">Hoy</button>
+          <button class="btn-secondary" id="nextDay" style="padding:8px 16px;">›</button>
+        </div>
+      </div>
+
+      <div style="display:grid; grid-template-columns:1fr 320px; gap:24px;">
+        <!-- Timeline -->
+        <div style="background:var(--surface-lowest); border-radius:var(--radius-lg); padding:24px; box-shadow:var(--shadow-sm);">
+          <div id="dailyTimeline"></div>
+        </div>
+
+        <!-- Panel lateral -->
+        <div style="display:flex; flex-direction:column; gap:16px;">
+          <div class="card card-accent-purple">
+            <h3 class="text-title" style="margin-bottom:12px;">Tareas del día</h3>
+            <div id="dailyTasks" style="display:flex; flex-direction:column; gap:8px;"></div>
+          </div>
+
+          <div style="background:var(--secondary); border-radius:var(--radius-lg); padding:20px;">
+            <p class="text-label" style="color:var(--on-secondary); opacity:0.8; margin-bottom:4px;">Energía del día</p>
+            <p class="text-headline-sm" style="color:var(--on-secondary);" id="dailyEnergyLabel">¡Vamos!</p>
+            <div style="background:rgba(255,255,255,0.2); height:8px; border-radius:var(--radius-full); overflow:hidden; margin-top:8px;">
+              <div style="height:100%; background:white; border-radius:var(--radius-full); width:70%;"></div>
+            </div>
+          </div>
+
+          <div class="cat-deco" style="text-align:center;">
+            <img src="cats/cat-cloud.png" alt="" style="width:110px; height:110px; object-fit:contain; opacity:0.8;">
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<!-- FAB mobile -->
+<button class="fab" id="fabBtn" style="display:none;">
+  <span class="material-symbols-outlined">add</span>
+</button>
+
+<!-- ── Color dot styles ───────────────────────────────── -->
+<style>
+  .color-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 3px solid transparent;
+    transition: all 0.15s;
+  }
+  .color-dot:hover, .color-dot.active { border-color: var(--primary); transform: scale(1.15); }
+
+  /* Task card overdue pulse */
+  @keyframes overduePulse {
+    0%,100% { box-shadow: 0 0 0 0 rgba(186,26,26,0.2); }
+    50% { box-shadow: 0 0 0 6px rgba(186,26,26,0); }
+  }
+  .task-card.overdue { animation: overduePulse 2s ease infinite; }
+</style>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>

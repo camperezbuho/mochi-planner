@@ -1,0 +1,14 @@
+{
+  "name": "mochi-planner",
+  "version": "1.0.0",
+  "description": "Tu planner personal cute y aesthetic ✨",
+  "scripts": {
+    "dev": "npx serve public -p 3000",
+    "build": "echo 'Static site - no build needed'",
+    "deploy": "npx wrangler pages deploy public"
+  },
+  "devDependencies": {
+    "serve": "^14.2.0",
+    "wrangler": "^3.0.0"
+  }
+}

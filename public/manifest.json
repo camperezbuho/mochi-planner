@@ -1,0 +1,17 @@
+{
+  "name": "Mochi Planner",
+  "short_name": "Mochi",
+  "description": "Tu planner personal cute y aesthetic 🐱",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fbf9f1",
+  "theme_color": "#625981",
+  "icons": [
+    {
+      "src": "cats/cat-peeking.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
