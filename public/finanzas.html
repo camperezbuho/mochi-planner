@@ -537,6 +537,10 @@
 
 <script type="module">
 import { salaryDB, exchangeDB, fixedExpensesDB, dailyExpensesDB, installmentsDB, jarsDB, formatARS, formatUSD, getCurrentMonthKey, monthKeyToLabel, getMonthsRange } from './js/finance-db.js';
+import { initAuth } from './js/auth.js';
+
+await initAuth({ requireAuth: true });
+
 
 // ── ESTADO ────────────────────────────────────────────────────
 let allSalaries = [], allExchanges = [], allFixed = [], allDaily = [], allInstallments = [], allJars = [];

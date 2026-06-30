@@ -1,97 +1,131 @@
-import { db, collection, doc, addDoc, updateDoc, deleteDoc, getDocs, onSnapshot, query, orderBy, where, Timestamp } from './firebase-config.js';
+import { db, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, Timestamp } from './firebase-config.js';
+import { getUID } from './auth.js';
+
+// Todas las colecciones ahora viven bajo users/{uid}/{collection}
+// para que cada usuario tenga sus propios datos, totalmente separados.
+
+function userCollection(name) {
+  const uid = getUID();
+  if (!uid) throw new Error('No hay usuario logueado');
+  return collection(db, 'users', uid, name);
+}
+function userDoc(name, id) {
+  const uid = getUID();
+  if (!uid) throw new Error('No hay usuario logueado');
+  return doc(db, 'users', uid, name, id);
+}
 
 // ─── TAREAS ────────────────────────────────────────────────────────────────
 
 export const tasksDB = {
-  // Escuchar cambios en tiempo real
   listen(callback) {
-    const q = query(collection(db, 'tasks'), orderBy('createdAt', 'desc'));
-    return onSnapshot(q, snapshot => {
-      const tasks = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      callback(tasks);
-    });
+    const q = query(userCollection('tasks'), orderBy('createdAt', 'desc'));
+    return onSnapshot(q, snapshot => callback(snapshot.docs.map(d => ({ id: d.id, ...d.data() }))));
   },
 
-  // Crear tarea
   async create(task) {
-    return await addDoc(collection(db, 'tasks'), {
+    return await addDoc(userCollection('tasks'), {
       title: task.title,
       description: task.description || '',
       category: task.category || 'General',
       priority: task.priority || 'media',
-      status: 'pendiente',        // pendiente | en-progreso | completada
+      status: task.status || 'pendiente',
       dueDate: task.dueDate ? Timestamp.fromDate(new Date(task.dueDate)) : null,
       estimatedMinutes: task.estimatedMinutes || null,
-      reminder: task.reminder || null,  // ISO string
+      reminder: task.reminder || null,
       reminderNotified: false,
       color: task.color || '#dcd0ff',
+      // WSJF
+      wsjfValue: task.wsjfValue || null,       // valor de negocio 1-10
+      wsjfUrgency: task.wsjfUrgency || null,   // urgencia 1-10
+      wsjfSize: task.wsjfSize || null,         // tamaño/esfuerzo 1-10
       createdAt: Timestamp.now(),
       updatedAt: Timestamp.now()
     });
   },
 
-  // Actualizar tarea
   async update(id, changes) {
-    await updateDoc(doc(db, 'tasks', id), {
-      ...changes,
-      updatedAt: Timestamp.now()
-    });
+    await updateDoc(userDoc('tasks', id), { ...changes, updatedAt: Timestamp.now() });
   },
 
-  // Completar / descompletar
+  async setStatus(id, status) {
+    await updateDoc(userDoc('tasks', id), { status, updatedAt: Timestamp.now() });
+  },
+
   async toggleComplete(id, currentStatus) {
     const newStatus = currentStatus === 'completada' ? 'pendiente' : 'completada';
-    await updateDoc(doc(db, 'tasks', id), {
-      status: newStatus,
-      updatedAt: Timestamp.now()
-    });
+    await updateDoc(userDoc('tasks', id), { status: newStatus, updatedAt: Timestamp.now() });
   },
 
-  // Eliminar
   async delete(id) {
-    await deleteDoc(doc(db, 'tasks', id));
+    await deleteDoc(userDoc('tasks', id));
   }
 };
 
-// ─── HÁBITOS ───────────────────────────────────────────────────────────────
+// ─── HÁBITOS / MILESTONES ──────────────────────────────────────────────────
 
 export const habitsDB = {
   listen(callback) {
-    const q = query(collection(db, 'habits'), orderBy('createdAt', 'desc'));
-    return onSnapshot(q, snapshot => {
-      const habits = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-      callback(habits);
-    });
+    const q = query(userCollection('habits'), orderBy('createdAt', 'desc'));
+    return onSnapshot(q, snapshot => callback(snapshot.docs.map(d => ({ id: d.id, ...d.data() }))));
   },
 
   async create(habit) {
-    return await addDoc(collection(db, 'habits'), {
+    return await addDoc(userCollection('habits'), {
       title: habit.title,
       icon: habit.icon || '✨',
       color: habit.color || '#dae8c3',
-      frequency: habit.frequency || 'daily',   // daily | weekdays | custom
-      reminderTime: habit.reminderTime || null, // "08:00"
-      completedDates: [],                       // ["2024-01-15", ...]
+      frequency: habit.frequency || 'daily',
+      reminderTime: habit.reminderTime || null,
+      goalDays: habit.goalDays || 30,        // milestone: meta de días
+      completedDates: [],
       streak: 0,
+      bestStreak: 0,
       createdAt: Timestamp.now()
     });
   },
 
-  async markToday(id, date, completedDates, streak) {
+  async markToday(id, date, completedDates, streak, bestStreak) {
     const dateStr = date.toISOString().split('T')[0];
     const already = completedDates.includes(dateStr);
-    const newDates = already
-      ? completedDates.filter(d => d !== dateStr)
-      : [...completedDates, dateStr];
+    const newDates = already ? completedDates.filter(d => d !== dateStr) : [...completedDates, dateStr];
     const newStreak = already ? Math.max(0, streak - 1) : streak + 1;
-    await updateDoc(doc(db, 'habits', id), {
-      completedDates: newDates,
-      streak: newStreak
-    });
+    const newBest = Math.max(bestStreak || 0, newStreak);
+    await updateDoc(userDoc('habits', id), { completedDates: newDates, streak: newStreak, bestStreak: newBest });
+  },
+
+  async update(id, changes) {
+    await updateDoc(userDoc('habits', id), changes);
   },
 
   async delete(id) {
-    await deleteDoc(doc(db, 'habits', id));
+    await deleteDoc(userDoc('habits', id));
+  }
+};
+
+// ─── DIARIO ÍNTIMO ─────────────────────────────────────────────────────────
+
+export const journalDB = {
+  listen(callback) {
+    const q = query(userCollection('journal'), orderBy('date', 'desc'));
+    return onSnapshot(q, snapshot => callback(snapshot.docs.map(d => ({ id: d.id, ...d.data() }))));
+  },
+
+  async create(entry) {
+    return await addDoc(userCollection('journal'), {
+      date: entry.date || new Date().toISOString().split('T')[0],
+      mood: entry.mood || '😊',
+      text: entry.text,
+      createdAt: Timestamp.now()
+    });
+  },
+
+  async update(id, changes) {
+    await updateDoc(userDoc('journal', id), changes);
+  },
+
+  async delete(id) {
+    await deleteDoc(userDoc('journal', id));
   }
 };
 
@@ -125,4 +159,12 @@ export function getDueLabel(dueDate) {
   if (diff === 1) return { label: 'Mañana', class: 'soon' };
   if (diff <= 7) return { label: `En ${diff} días`, class: 'soon' };
   return { label: formatDate(dueDate), class: 'future' };
+}
+
+// ─── WSJF ──────────────────────────────────────────────────────────────────
+// WSJF simplificado = (Valor + Urgencia) / Tamaño
+export function calcWSJF(task) {
+  const v = task.wsjfValue, u = task.wsjfUrgency, s = task.wsjfSize;
+  if (!v || !u || !s) return null;
+  return +((v + u) / s).toFixed(2);
 }

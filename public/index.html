@@ -45,6 +45,16 @@
         </select>
       </div>
     </div>
+
+    <div class="form-group" id="taskStatusGroup" style="display:none;">
+      <label>Estado</label>
+      <select id="taskStatus" class="form-select">
+        <option value="pendiente">Pendiente</option>
+        <option value="en-progreso">En progreso</option>
+        <option value="completada">Completada</option>
+      </select>
+    </div>
+
     <div class="form-row">
       <div class="form-group">
         <label>Fecha límite</label>
@@ -59,6 +69,25 @@
       <label>Recordatorio</label>
       <input type="datetime-local" id="taskReminder" class="form-input">
     </div>
+
+    <!-- WSJF -->
+    <p class="text-label" style="color:var(--primary);margin:12px 0 10px;">⚡ PRIORIZACIÓN WSJF (opcional)</p>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Valor (1-10)</label>
+        <input type="number" id="wsjfValue" class="form-input" placeholder="¿Qué tan importante?" min="1" max="10">
+      </div>
+      <div class="form-group">
+        <label>Urgencia (1-10)</label>
+        <input type="number" id="wsjfUrgency" class="form-input" placeholder="¿Qué tan urgente?" min="1" max="10">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Tamaño/Esfuerzo (1-10)</label>
+      <input type="number" id="wsjfSize" class="form-input" placeholder="¿Cuánto esfuerzo lleva?" min="1" max="10">
+    </div>
+    <div id="wsjfPreview" style="font-size:13px;color:var(--on-surface-variant);margin-bottom:12px;"></div>
+
     <div class="form-group">
       <label>Color</label>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;" id="colorPicker">
@@ -80,7 +109,7 @@
 <!-- MODAL: NUEVO HÁBITO -->
 <div class="modal-overlay" id="habitModal">
   <div class="modal">
-    <h2>🌱 Nuevo Hábito</h2>
+    <h2>🌱 Nuevo Hábito / Milestone</h2>
     <div class="form-row">
       <div class="form-group">
         <label>Nombre del hábito</label>
@@ -105,6 +134,10 @@
       </div>
     </div>
     <div class="form-group">
+      <label>🎯 Meta (días de racha)</label>
+      <input type="number" id="habitGoal" class="form-input" placeholder="30" min="1" max="365" value="30">
+    </div>
+    <div class="form-group">
       <label>Color</label>
       <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:4px;" id="habitColorPicker">
         <button class="color-dot active" data-color="#dae8c3" style="background:#dae8c3;"></button>
@@ -118,6 +151,26 @@
     <div class="modal-footer">
       <button class="btn-secondary" id="cancelHabitBtn">Cancelar</button>
       <button class="btn-primary" id="saveHabitBtn">Crear hábito 🌸</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: DIARIO ÍNTIMO -->
+<div class="modal-overlay" id="journalModal">
+  <div class="modal">
+    <h2>📖 <span id="journalDateLabel">Hoy</span></h2>
+    <input type="hidden" id="journalEditingId">
+    <div class="form-group">
+      <label>¿Cómo te sentís?</label>
+      <div id="moodPicker" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;"></div>
+    </div>
+    <div class="form-group">
+      <label>Escribí lo que quieras</label>
+      <textarea id="journalText" class="form-textarea" placeholder="¿Qué pasó hoy? ¿Cómo te sentís? Este espacio es solo para vos..." style="min-height:140px;"></textarea>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-secondary" id="cancelJournalBtn">Cancelar</button>
+      <button class="btn-primary" id="saveJournalBtn">Guardar 📝</button>
     </div>
   </div>
 </div>
@@ -144,13 +197,14 @@
       <a href="#" class="nav-item active" data-page="dashboard"><span class="material-symbols-outlined">dashboard</span> Dashboard</a>
       <a href="#" class="nav-item" data-page="tasks"><span class="material-symbols-outlined">checklist</span> Mis Tareas</a>
       <a href="#" class="nav-item" data-page="habits"><span class="material-symbols-outlined">self_improvement</span> Hábitos</a>
+      <a href="#" class="nav-item" data-page="journal"><span class="material-symbols-outlined">auto_stories</span> Diario</a>
       <a href="#" class="nav-item" data-page="monthly"><span class="material-symbols-outlined">calendar_month</span> Mes</a>
       <a href="#" class="nav-item" data-page="weekly"><span class="material-symbols-outlined">view_week</span> Semana</a>
       <a href="#" class="nav-item" data-page="daily"><span class="material-symbols-outlined">calendar_view_day</span> Día</a>
     </nav>
     <div class="sidebar-divider" style="margin-top:auto;"></div>
     <a href="finanzas.html" class="nav-item" style="color:var(--secondary);"><span class="material-symbols-outlined">account_balance_wallet</span> Finanzas</a>
-    <a href="#" class="nav-item"><span class="material-symbols-outlined">settings</span> Ajustes</a>
+    <a href="#" class="nav-item" data-page="settings"><span class="material-symbols-outlined">settings</span> Ajustes</a>
   </aside>
 
   <!-- MAIN -->
@@ -170,6 +224,7 @@
           <span class="badge" id="notifBadge" style="display:none;"></span>
         </button>
         <button class="btn-add-task" id="topbarNewTask">+ Tarea</button>
+        <div class="user-badge" id="userBadge"></div>
       </div>
     </header>
 
@@ -258,22 +313,22 @@
           <p class="text-body-sm" style="color:var(--on-primary); opacity:0.7; margin-top:8px;">🎯 Meta: 30 días</p>
         </div>
         <div class="card col-12" style="background:var(--surface-container-low); display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-          <div style="display:flex; align-items:center; gap:16px; padding:8px;">
-            <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
+          <button class="journal-quick-card" id="quickJournalBtn" style="display:flex; align-items:center; gap:16px; padding:8px;">
+            <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm); flex-shrink:0;">
               <span class="material-symbols-outlined" style="color:var(--primary);">edit_note</span>
             </div>
-            <div>
+            <div style="text-align:left;">
               <p class="text-title">Reflexión diaria</p>
-              <p class="text-body-sm" style="color:var(--on-surface-variant);">¿Cómo te sentís hoy? Anotá un pensamiento.</p>
+              <p class="text-body-sm journal-preview-text" style="color:var(--on-surface-variant);">¿Cómo te sentís hoy? Anotá un pensamiento.</p>
             </div>
-          </div>
+          </button>
           <div style="display:flex; align-items:center; gap:16px; padding:8px;">
-            <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm);">
-              <span class="material-symbols-outlined" style="color:var(--secondary);">lightbulb</span>
+            <div style="width:48px; height:48px; background:white; border-radius:var(--radius-full); display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-sm); flex-shrink:0;">
+              <span class="material-symbols-outlined" id="mochiTipIcon" style="color:var(--secondary);">lightbulb</span>
             </div>
             <div>
               <p class="text-title">Tip Mochi</p>
-              <p class="text-body-sm" style="color:var(--on-surface-variant);" id="mochiTip">Dividí tareas grandes en mochis de 15 min 🐾</p>
+              <p class="text-body-sm" style="color:var(--on-surface-variant);" id="mochiTip">Cargando tip...</p>
             </div>
           </div>
         </div>
@@ -282,12 +337,12 @@
 
     <!-- PAGE: TASKS -->
     <div class="page" id="page-tasks">
-      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; flex-wrap:wrap; gap:12px;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:16px; flex-wrap:wrap; gap:12px;">
         <div>
           <h2 class="text-headline" style="color:var(--on-surface);">Mis Tareas</h2>
           <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;" id="tasksSubtitle">Cargando...</p>
         </div>
-        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <div style="display:flex; gap:8px; flex-wrap:wrap; align-items:center;">
           <select id="filterStatus" class="form-select" style="width:auto; padding:8px 12px;">
             <option value="all">Todas</option>
             <option value="pendiente">Pendientes</option>
@@ -303,27 +358,32 @@
           <button class="btn-primary" id="tasksNewBtn">+ Nueva tarea</button>
         </div>
       </div>
-      <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:20px;" id="kanbanGrid">
+      <label class="wsjf-sort-toggle" style="margin-bottom:16px; width:fit-content;">
+        <input type="checkbox" id="sortWsjf">
+        ⚡ Ordenar por prioridad WSJF
+      </label>
+      <p style="font-size:12px;color:var(--on-surface-variant);margin-bottom:16px;">💡 Arrastrá las tarjetas entre columnas para cambiar su estado</p>
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:20px;" id="kanbanGrid">
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
             <div style="width:10px; height:10px; border-radius:50%; background:var(--primary);"></div>
             <h3 class="text-title">En progreso</h3>
           </div>
-          <div id="colInProgress" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
+          <div id="colInProgress" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
             <div style="width:10px; height:10px; border-radius:50%; background:var(--secondary);"></div>
             <h3 class="text-title">Pendientes</h3>
           </div>
-          <div id="colPending" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
+          <div id="colPending" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
         <div>
           <div style="display:flex; align-items:center; gap:8px; margin-bottom:12px;">
             <div style="width:10px; height:10px; border-radius:50%; background:var(--outline);"></div>
             <h3 class="text-title">Completadas</h3>
           </div>
-          <div id="colCompleted" style="display:flex; flex-direction:column; gap:10px; min-height:100px;"></div>
+          <div id="colCompleted" style="display:flex; flex-direction:column; gap:10px;"></div>
         </div>
       </div>
       <div style="display:flex; justify-content:center; margin-top:32px;" class="cat-deco">
@@ -336,14 +396,26 @@
       <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
         <div>
           <h2 class="text-headline" style="color:var(--on-surface);">Mis Hábitos</h2>
-          <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;">Construí rutinas que te hagan bien 🌱</p>
+          <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;">Milestones personales para medir tu constancia 🌱</p>
         </div>
         <button class="btn-primary" id="habitsNewBtn">+ Nuevo hábito</button>
       </div>
-      <div id="habitsList" style="display:flex; flex-direction:column; gap:12px; max-width:640px;"></div>
+      <div id="habitsList" style="display:flex; flex-direction:column; gap:14px; max-width:680px;"></div>
       <div style="display:flex; justify-content:flex-end; margin-top:32px;" class="cat-deco">
         <img src="cats/cat-yarn.png" alt="" style="width:130px; height:130px; object-fit:contain; opacity:0.75;">
       </div>
+    </div>
+
+    <!-- PAGE: JOURNAL -->
+    <div class="page" id="page-journal">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:32px;">
+        <div>
+          <h2 class="text-headline" style="color:var(--on-surface);">📖 Mi Diario</h2>
+          <p class="text-body-sm" style="color:var(--on-surface-variant); margin-top:4px;">Un espacio íntimo para tus pensamientos 🌸</p>
+        </div>
+        <button class="btn-primary" id="journalNewBtn">+ Escribir hoy</button>
+      </div>
+      <div id="journalList" style="display:flex; flex-direction:column; gap:16px; max-width:700px;"></div>
     </div>
 
     <!-- PAGE: MONTHLY -->
@@ -411,6 +483,28 @@
       </div>
     </div>
 
+    <!-- PAGE: SETTINGS -->
+    <div class="page" id="page-settings">
+      <h2 class="text-headline" style="margin-bottom:24px;">⚙️ Ajustes</h2>
+
+      <div class="card" style="max-width:480px; margin-bottom:20px;">
+        <h3 class="text-title" style="margin-bottom:16px;">Tu nombre en la app</h3>
+        <div class="form-group">
+          <label>¿Cómo querés que te llamemos?</label>
+          <input type="text" id="customNameInput" class="form-input" placeholder="ej: Cami, Mochi, etc.">
+        </div>
+        <button class="btn-primary" id="saveNameBtn">Guardar nombre 🌸</button>
+      </div>
+
+      <div class="card" style="max-width:480px;">
+        <h3 class="text-title" style="margin-bottom:16px;">Cuenta</h3>
+        <button class="btn-secondary" id="logoutBtn" style="width:100%;">
+          <span class="material-symbols-outlined" style="font-size:16px;vertical-align:middle;">logout</span>
+          Cerrar sesión
+        </button>
+      </div>
+    </div>
+
   </div><!-- /main-content -->
 </div><!-- /app-shell -->
 
@@ -422,34 +516,26 @@
 <!-- BOTTOM NAV mobile -->
 <nav class="mobile-nav" id="mobileNav">
   <button class="mobile-nav-item active" data-page="dashboard">
-    <span class="material-symbols-outlined">dashboard</span>
-    <span>Inicio</span>
+    <span class="material-symbols-outlined">dashboard</span><span>Inicio</span>
   </button>
   <button class="mobile-nav-item" data-page="tasks">
-    <span class="material-symbols-outlined">checklist</span>
-    <span>Tareas</span>
+    <span class="material-symbols-outlined">checklist</span><span>Tareas</span>
   </button>
   <button class="mobile-nav-item" data-page="habits">
-    <span class="material-symbols-outlined">self_improvement</span>
-    <span>Hábitos</span>
+    <span class="material-symbols-outlined">self_improvement</span><span>Hábitos</span>
   </button>
-  <button class="mobile-nav-item" data-page="monthly">
-    <span class="material-symbols-outlined">calendar_month</span>
-    <span>Mes</span>
+  <button class="mobile-nav-item" data-page="journal">
+    <span class="material-symbols-outlined">auto_stories</span><span>Diario</span>
   </button>
   <a href="finanzas.html" class="mobile-nav-item">
-    <span class="material-symbols-outlined">account_balance_wallet</span>
-    <span>Finanzas</span>
+    <span class="material-symbols-outlined">account_balance_wallet</span><span>Finanzas</span>
   </a>
 </nav>
 
 <style>
   .color-dot { width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all 0.15s; }
   .color-dot:hover, .color-dot.active { border-color:var(--primary); transform:scale(1.15); }
-  @keyframes overduePulse {
-    0%,100% { box-shadow: 0 0 0 0 rgba(186,26,26,0.2); }
-    50% { box-shadow: 0 0 0 6px rgba(186,26,26,0); }
-  }
+  @keyframes overduePulse { 0%,100% { box-shadow: 0 0 0 0 rgba(186,26,26,0.2); } 50% { box-shadow: 0 0 0 6px rgba(186,26,26,0); } }
   .task-card.overdue { animation: overduePulse 2s ease infinite; }
   @media (max-width: 768px) {
     #dailyGrid { grid-template-columns: 1fr !important; }

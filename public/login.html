@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es" class="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Mochi Planner — Iniciar sesión</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐱</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .login-shell {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: linear-gradient(160deg, var(--surface) 0%, var(--primary-fixed) 100%);
+    }
+    .login-card {
+      background: var(--surface-lowest);
+      border-radius: var(--radius-xl);
+      padding: 48px 36px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 30px 60px -10px rgba(98,89,129,0.25);
+      text-align: center;
+    }
+    .login-logo {
+      width: 72px; height: 72px;
+      background: var(--primary-container);
+      border-radius: var(--radius-full);
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .login-logo span { font-size: 36px; color: var(--primary); }
+    .login-card h1 { font-family: var(--font-display); font-size: 28px; color: var(--primary); margin-bottom: 8px; }
+    .login-card p { color: var(--on-surface-variant); margin-bottom: 32px; font-size: 14px; }
+    .btn-google {
+      width: 100%;
+      display: flex; align-items: center; justify-content: center; gap: 10px;
+      background: white; color: #1b1c17;
+      border: 1px solid var(--outline-variant);
+      padding: 14px 20px; border-radius: var(--radius-full);
+      font-weight: 600; font-size: 15px;
+      transition: all 0.2s cubic-bezier(0.34,1.56,0.64,1);
+      box-shadow: var(--shadow-sm);
+    }
+    .btn-google:hover { transform: scale(1.02); box-shadow: var(--shadow-md); }
+    .btn-google:active { transform: scale(0.98); }
+    .btn-google img { width: 20px; height: 20px; }
+    .login-error {
+      margin-top: 16px; padding: 10px 14px;
+      background: var(--error-container); color: var(--on-error-container);
+      border-radius: var(--radius-md); font-size: 13px;
+      display: none;
+    }
+    .login-cats { display: flex; justify-content: center; gap: -10px; margin-top: 28px; opacity: 0.85; }
+    .login-cats img { width: 70px; height: 70px; object-fit: contain; }
+  </style>
+</head>
+<body>
+  <div class="login-shell">
+    <div class="login-card">
+      <div class="login-logo"><span class="material-symbols-outlined">bubble_chart</span></div>
+      <h1>Mochi Planner</h1>
+      <p>Tu espacio personal, cute y organizado 🌸</p>
+
+      <button class="btn-google" id="googleLoginBtn">
+        <img src="https://www.google.com/favicon.ico" alt="">
+        Continuar con Google
+      </button>
+
+      <div class="login-error" id="loginError">
+        Hubo un problema al iniciar sesión. Probá de nuevo 🐱
+      </div>
+
+      <div class="login-cats">
+        <img src="cats/cat-peeking.png" alt="">
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initAuth, loginWithGoogle } from './js/auth.js';
+
+    // Si ya está logueado, redirigir al dashboard
+    initAuth({ requireAuth: false, redirectIfAuthed: 'index.html' });
+
+    document.getElementById('googleLoginBtn').addEventListener('click', async () => {
+      const errorEl = document.getElementById('loginError');
+      errorEl.style.display = 'none';
+      try {
+        await loginWithGoogle();
+        window.location.href = 'index.html';
+      } catch (err) {
+        errorEl.style.display = 'block';
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
