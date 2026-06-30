@@ -6,6 +6,7 @@ import { tasksDB, habitsDB, journalDB, getDueLabel, isOverdue, calcWSJF } from '
 import { requestPermission, getPermission, startReminderLoop, scheduleHabitReminders, sendNotification, registerServiceWorker } from './notifications.js';
 import { initAuth, onUserReady, logout, getUserDisplayName, updateDisplayName, getUserProfile } from './auth.js';
 import { startUpdateChecker } from './update-checker.js';
+import { registerFcmToken } from './fcm.js';
 
 let allTasks  = [];
 let allHabits = [];
@@ -92,6 +93,9 @@ async function init() {
 
   const perm = getPermission();
   const banner = document.getElementById('notifBanner');
+  if (perm === 'granted') {
+    await registerFcmToken();
+  }
   if (perm !== 'granted' && banner) {
     banner.style.display = 'flex';
     document.getElementById('enableNotifBtn')?.addEventListener('click', async () => {
@@ -99,6 +103,7 @@ async function init() {
       if (granted) {
         banner.style.display = 'none';
         sendNotification('🐱 ¡Mochi Planner activado!', 'Ya recibirás recordatorios.');
+        await registerFcmToken();
       } else {
         alert('Activá las notificaciones desde la configuración del navegador para recibir recordatorios. En Chrome Android: ⋮ → Configuración del sitio → Notificaciones → Permitir.');
       }
