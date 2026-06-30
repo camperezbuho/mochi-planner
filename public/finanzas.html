@@ -538,8 +538,10 @@
 <script type="module">
 import { salaryDB, exchangeDB, fixedExpensesDB, dailyExpensesDB, installmentsDB, jarsDB, formatARS, formatUSD, getCurrentMonthKey, monthKeyToLabel, getMonthsRange } from './js/finance-db.js';
 import { initAuth } from './js/auth.js';
+import { startUpdateChecker } from './js/update-checker.js';
 
 await initAuth({ requireAuth: true });
+startUpdateChecker();
 
 
 // ── ESTADO ────────────────────────────────────────────────────

@@ -5,6 +5,7 @@
 import { tasksDB, habitsDB, journalDB, getDueLabel, isOverdue, calcWSJF } from './db.js';
 import { requestPermission, getPermission, startReminderLoop, scheduleHabitReminders, sendNotification, registerServiceWorker } from './notifications.js';
 import { initAuth, onUserReady, logout, getUserDisplayName, updateDisplayName, getUserProfile } from './auth.js';
+import { startUpdateChecker } from './update-checker.js';
 
 let allTasks  = [];
 let allHabits = [];
@@ -75,6 +76,7 @@ document.querySelectorAll('.mobile-nav-item[data-page]').forEach(btn => {
 async function init() {
   await initAuth({ requireAuth: true });
   await registerServiceWorker();
+  startUpdateChecker();
 
   onUserReady((user, profile) => {
     if (!user) return;
